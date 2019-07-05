@@ -21,7 +21,7 @@ public class Ipv6Attribute extends RadiusAttribute {
 	public Ipv6Attribute() {
 		super();
 	}
-	
+
 	/**
 	 * Constructs an IPv6 attribute.
 	 * @param type attribute type code
@@ -31,7 +31,7 @@ public class Ipv6Attribute extends RadiusAttribute {
 		setAttributeType(type);
 		setAttributeValue(value);
 	}
-	
+
 	/**
 	 * Returns the attribute value (IPv6 number) as a string of the
 	 * format ipv6 address
@@ -40,17 +40,17 @@ public class Ipv6Attribute extends RadiusAttribute {
 	public String getAttributeValue() {
 		byte[] data = getAttributeData();
 		if (data == null || data.length != 16)
-			throw new RuntimeException("ip attribute: expected 16 bytes attribute data");
+			throw new RuntimeException("IPv6 address attribute: expected 16 bytes attribute data");
 		try {
 			Inet6Address addr = (Inet6Address)Inet6Address.getByAddress(null, data);
-		
+
 			return addr.getHostAddress();
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("bad IPv6 address", e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Sets the attribute value (IPv6 number). String format:
 	 * ipv6 address.
@@ -63,15 +63,15 @@ public class Ipv6Attribute extends RadiusAttribute {
 			throw new IllegalArgumentException("bad IPv6 address : " + value);
 		try {
 			final Inet6Address addr = (Inet6Address)Inet6Address.getByName(value);
-		
+
 			byte[] data = addr.getAddress();
-		
+
 			setAttributeData(data);
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("bad IPv6 address : " + value, e);
 		}
 	}
-	
+
 
 	/**
 	 * Check attribute length.

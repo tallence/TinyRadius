@@ -17,12 +17,12 @@ import org.tinyradius.util.RadiusException;
 public class Ipv6PrefixAttribute extends RadiusAttribute {
 
 	/**
-	 * Constructs an empty IP attribute.
+	 * Constructs an empty IPv6 prefix attribute.
 	 */
 	public Ipv6PrefixAttribute() {
 		super();
 	}
-	
+
 	/**
 	 * Constructs an IPv6 prefix attribute.
 	 * @param type attribute type code
@@ -32,7 +32,7 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 		setAttributeType(type);
 		setAttributeValue(value);
 	}
-	
+
 	/**
 	 * Returns the attribute value (IP number) as a string of the
 	 * format "xx.xx.xx.xx".
@@ -40,19 +40,19 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 	 */
 	public String getAttributeValue() {
 		final byte[] data = getAttributeData();
-		if (data == null || data.length != 18)
-			throw new RuntimeException("ip attribute: expected 18 bytes attribute data");
+		if (data == null || data.length <2|| data.length > 18)
+			throw new RuntimeException("IPv6 prefix attribute: expected 4-20 bytes attribute data");
 		try {
-		        final int prefix = (data[1] & 0xff);		        
-			final Inet6Address addr = (Inet6Address)Inet6Address.getByAddress(null, Arrays.copyOfRange(data,2,data.length));
-		
+		        final int prefix = (data[1] & 0xff);
+			final Inet6Address addr = (Inet6Address)Inet6Address.getByAddress(null, Arrays.copyOfRange(data,2,18));
+
 			return addr.getHostAddress() + "/" + prefix;
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("bad IPv6 prefix", e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Sets the attribute value (IPv6 number/prefix). String format:
 	 * ipv6 address.
@@ -66,23 +66,23 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 		try {
 		        final byte[] data = new byte[18];
 		        data[0] = 0;
-//TODO better checking		        
+//TODO better checking
 		        final int slashPos = value.indexOf("/");
 		        data[1] = (byte)(Integer.valueOf(value.substring(slashPos+1)) & 0xff);
-		        
+
 			final Inet6Address addr = (Inet6Address)Inet6Address.getByName(value.substring(0,slashPos));
-		
+
 			byte[] ipData = addr.getAddress();
 			for (int i = 0; i < ipData.length; i++) {
 			    data[i+2] = ipData[i];
 			}
-		
+
 			setAttributeData(data);
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("bad IPv6 address : " + value, e);
 		}
 	}
-	
+
 
 	/**
 	 * Check attribute length.
@@ -90,8 +90,8 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 	 */
 	public void readAttribute(byte[] data, int offset, int length)
 	throws RadiusException {
-		if (length != 20)
-			throw new RadiusException("IP attribute: expected 18 bytes data");
+		if (length < 6 || length > 20)
+			throw new RadiusException("IPv6 prefix attribute: expected 4-20 bytes data");
 		super.readAttribute(data, offset, length);
 	}
 
