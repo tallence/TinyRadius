@@ -5,7 +5,6 @@
 package org.tinyradius.attribute;
 
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
 
@@ -90,8 +89,10 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 	 */
 	public void readAttribute(byte[] data, int offset, int length)
 	throws RadiusException {
-		if (length < 6 || length > 20)
-			throw new RadiusException("IPv6 prefix attribute: expected 4-20 bytes data");
+		if (length < 6 || length > 20) {
+			String asString = Arrays.toString(Arrays.copyOfRange(data, offset, offset+length));
+			throw new RadiusException("IPv6 prefix attribute: expected 4-20 bytes data, got " + length + " bytes: " + asString);
+		}
 		super.readAttribute(data, offset, length);
 	}
 
