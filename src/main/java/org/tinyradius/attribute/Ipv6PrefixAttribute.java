@@ -89,7 +89,8 @@ public class Ipv6PrefixAttribute extends RadiusAttribute {
 	 */
 	public void readAttribute(byte[] data, int offset, int length)
 	throws RadiusException {
-		if (length < 6 || length > 20) {
+		// At least 4 (type, length, reserved, prefix-length for 0-byte prefix), up to 20 (for 16-byte prefix)
+		if (length < 4 || length > 20) {
 			String asString = Arrays.toString(Arrays.copyOfRange(data, offset, offset+length));
 			throw new RadiusException("IPv6 prefix attribute: expected 4-20 bytes data, got " + length + " bytes: " + asString);
 		}
