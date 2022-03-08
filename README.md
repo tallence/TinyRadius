@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/ctran/TinyRadius.svg?branch=master)](https://travis-ci.org/ctran/TinyRadius)
- 
-TinyRadius README
+This is a fork with a specific bugfix (relating to IPv6 prefixes) for the Tallence AG project "HAAPA-EU".
 
 TinyRadius is a simple, small and fast Java Radius library capable of
 sending and receiving Radius packets of all types. It is released
